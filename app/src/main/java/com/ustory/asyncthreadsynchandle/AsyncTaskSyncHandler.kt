@@ -47,30 +47,20 @@ class AsyncTaskSyncHandler {
 
     inner class HandleThread : Thread() {
         override fun run() {
-            Log.i("qiyue", "程序开始执行》》》》")
             while (!Thread.currentThread().isInterrupted) {
-//            while (isStart) {//可以记录程序是否运行
                 try {
                     if (exeState == ExeState.FINISH) {
-                        Log.i("qiyue", "开始运行")
-                        //没有任务会阻塞在这里
                         var runnable = queues.take()
-                        Log.i("qiyue", "取出任务")
                         exeState = ExeState.RUNNING
                         runnable.run {
-                            Log.i("qiyue", "任务结束")
                             exeState = ExeState.FINISH
                         }
                     }
                 } catch (e: InterruptedException) {
-                    Log.i("qiyue", "程序被打断")
-                    // 当程序本打断后打断状态会被重置，所以要重新设置一下，否则会死循环
-                    // Thread.interrupted() 会被重置
                     Thread.currentThread().interrupt()
                 }
             }
             isRunState = false
-            Log.i("qiyue", "程序退出》》》》》》")
         }
 
     }
